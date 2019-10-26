@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block content_title %}
+    <div class="title-content">
+        <h1>
+            {{ post.title }}
+            {% for t in tags %}
+                <a href=" {{ url_for('posts.tag_detail', slug = t.slug) }} ">
+                    <span class="badge badge-warning">{{ t }}</span>
+                </a>
+            {% endfor %}
+
+        </h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 post-image-block d-flex" style="justify-content: center;">
+            {% for i in post.pictures %}
+                <img src="{{ url_for('static', filename='img/' +  i.name) }}" class="post-image img-fluid">
+            {% endfor %}
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="jumbotron ">
+                <div class="user-display d-flex" style="justify-content: left;">
+                    {% for i in post.user %}
+                        <div class="avatar ">
+                            {% for a in i.avatar %}
+                                <div id="user-profile-avatar"
+                                     style="background: url('{{ url_for('static', filename='img/avatars/' + a.name) }}');
+                                             background-position: center; background-size: cover; border-radius: 100%; width: 100px; height: 100px;"></div>
+{#                                <img src="{{ url_for('static', filename='img/avatars/' + a.name) }}"#}
+{#                                     class="rounded-circle img-fluid">#}
+                            {% endfor %}
+                        </div>
+                        <h3 class="name">{{ i.nickname }}</h3>
+                    {% endfor %}
+                </div>
+                <div class="pt-4">
+                    <h5>Publication date: <em>{{ post.createDate.strftime("%d.%m.%Y") }}</em></h5>
+                    <h4>Описание:<br>{{ post.body }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="like-comment d-flex pt-3">
+        <div id="response" class="d-flex" style="align-items: center;">
+            {% if is_like_set %}
+                <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:red;"></i>
+            {% else %}
+                <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:#efefef;"></i>
+            {% endif %}
+            <h5 id='h5' style="margin-left: 3px;">{{ post.likes }}</h5>
+
+
+        </div>
+        <div class="comments-block">
+            <div class="d-lg-flex" style="align-items: center; margin-left: 10px;">
+                <a class="btn btn-primary comm d-flex" data-toggle="collapse" href="#collapseExample" role="button"
+                   aria-expanded="false" id="btn-com" aria-controls="collapseExample"
+                   style="align-items: center; width:42px;">
+                    <i class="fas fa-comment"></i>
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body" style="padding: 0px;">
+                        <form id="comment_form" class="d-lg-flex" style="align-items: center;"
+                              enctype="multipart/form-data">
+                            <textarea id="comment_text" required></textarea>
+                            <button class="btn btn-primary" id="btn-comment" data-toggle="collapse"
+                                    href="#collapseExample" role="button"
+                                    aria-expanded="true" id="btn-com" aria-controls="collapseExample">
+                                Оставить комментарий
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="comments">
+        {% for comments in post.comment %}
+            <div class="media">
+                <div id="comment" class="media-body d-flex mt-4">
+                    {% for author in comments.author %}
+
+                        {% for image in author.avatar %}
+                            <img src="{{ url_for('static', filename='img/avatars/' + image.name) }}"
+                                 class="mr-3 rounded-circle user-comment-icon">
+                        {% endfor %}
+                        <div class="comment-body">
+                        <h5>{{ author.nickname }}</h5>
+                    {% endfor %}
+                    {{ comments.text }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {#    <div class="row post-for-big">#}
+    {#{#        <div class="col-8 post-image-block d-flex" style="justify-content: center;">#}
+    {#{#            {% for i in post.pictures %}#}
+    {#{#                <img src="{{ url_for('static', filename='img/' +  i.name) }}" class="img-fluid post-image">#}
+    {#{#            {% endfor %}#}
+    {#{#        </div>#}
+    {#{##}
+    {#{##}
+    {#{#        <div class="col-4">#}
+    {#{#            <div class="jumbotron">#}
+    {#{#                <div class="user-display d-flex" style="justify-content: left;">#}
+    {#{#                    {% for i in post.user %}#}
+    {#{#                        <div class="avatar">#}
+    {#{#                            {% for a in i.avatar %}#}
+    {#{#                                <img src="{{ url_for('static', filename='img/avatars/' + a.name) }}" alt=""#}
+    {#{#                                     class="rounded-circle img-fluid">#}
+    {#{#                            {% endfor %}#}
+    {#{#                        </div>#}
+    {#{#                        <h3 class="name">{{ i }}</h3>#}
+    {#{#                    {% endfor %}#}
+    {#{#                </div>#}
+    {#{#                <div class="pt-4">#}
+    {#{#                    <h5>Publication date: <em>{{ post.createDate.strftime("%d.%m.%Y") }}</em></h5>#}
+    {#{#                    <h4>Описание:<br>{{ post.body }}</h4>#}
+    {#{#                </div>#}
+    {#{#            </div>#}
+    {#{#        </div>#}
+    {#{##}
+    {#{#        <div class="like-comment d-flex pt-3">#}
+    {#{#            <div id="response" class="d-flex" style="align-items: center;">#}
+    {#{##}
+    {#{##}
+    {#{#                {% if is_like_set %}#}
+    {#{#                    <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:red;"></i>#}
+    {#{#                {% else %}#}
+    {#{#                    <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:#efefef;"></i>#}
+    {#{#                {% endif %}#}
+    {#{#                <h5 id='h5' style="margin-left: 3px;">{{ post.likes }}</h5>#}
+    {#{##}
+    {#{##}
+    {#{#            </div>#}
+    {#{#            <div class="comments-block">#}
+    {#{#                <div class="d-flex" style="align-items: center; margin-left: 10px;">#}
+    {#{#                    <a class="btn btn-primary comm d-flex" data-toggle="collapse" href="#collapseExample" role="button"#}
+    {#{#                       aria-expanded="false" id="btn-com" aria-controls="collapseExample" style="align-items: center;">#}
+    {#{#                        <i class="fas fa-comment"></i>#}
+    {#{#                    </a>#}
+    {#{#                    <div class="collapse" id="collapseExample">#}
+    {#{#                        <div class="card card-body" style="padding: 0px;">#}
+    {#{#                            <form id="comment_form" class="d-flex" style="align-items: center;"#}
+    {#{#                                  enctype="multipart/form-data">#}
+    {#{#                                <textarea id="comment_text" cols="60" rows="3" required></textarea>#}
+    {#{#                                <button class="btn btn-primary" id="btn-comment" data-toggle="collapse"#}
+    {#{#                                        href="#collapseExample" role="button"#}
+    {#{#                                        aria-expanded="true" id="btn-com" aria-controls="collapseExample">#}
+    {#{#                                    Оставить комментарий#}
+    {#{#                                </button>#}
+    {#{#                            </form>#}
+    {#{#                        </div>#}
+    {#{#                    </div>#}
+    {#{#                </div>#}
+    {#{#            </div>#}
+    {#{#        </div>#}
+    {#{#        <div id="comments">#}
+    {#{#            {% for comments in post.comment %}#}
+    {#{#                <div class="media">#}
+    {#{#                    <div id="comment" class="media-body d-flex mt-4">#}
+    {#{#                        {% for author in comments.author %}#}
+    {#{#                            {% for image in author.avatar %}#}
+    {#{#                                <img src="{{ url_for('static', filename='img/avatars/' + image.name) }}"#}
+    {#{#                                     class="mr-3 rounded-circle user-comment-icon">#}
+    {#{#                            {% endfor %}#}
+    {#{#                            <div class="comment-body">#}
+    {#{#                            <h5>{{ author.nickname }}</h5>#}
+    {#{#                        {% endfor %}#}
+    {#{#                        {{ comments.text }}#}
+    {#{#                        </div>#}
+    {#{#                    </div>#}
+    {#{#                </div>#}
+    {#{#            {% endfor %}#}
+    {#{#        </div>#}
+    {#{#    </div>#}
+    {#{##}
+    {#{##}
+    {#{##}
+    {#{##}
+    {#{##}
+    {#{#    <div class="row post-for-small">#}
+    {#{#        <div class="col-12 post-image-block d-flex" style="justify-content: center;">#}
+    {#{#            {% for i in post.pictures %}#}
+    {#{#                <img src="{{ url_for('static', filename='img/' +  i.name) }}" class="img-fluid post-image">#}
+    {#{#            {% endfor %}#}
+    {#{#        </div>#}
+    {#{#        <div class="col-12">#}
+    {#{#            <div class="jumbotron">#}
+    {#{#                <div class="user-display d-flex" style="justify-content: left;">#}
+    {#{#                    {% for i in post.user %}#}
+    {#{#                        <div class="avatar">#}
+    {#{#                            {% for a in i.avatar %}#}
+    {#{#                                <img src="{{ url_for('static', filename='img/avatars/' + a.name) }}" alt=""#}
+    {#{#                                     class="rounded-circle img-fluid">#}
+    {#{#                            {% endfor %}#}
+    {#{#                        </div>#}
+    {#{#                        <h3 class="name">{{ i }}</h3>#}
+    {#{#                    {% endfor %}#}
+    {#{#                </div>#}
+    {#{#                <div class="pt-4">#}
+    {#{#                    <h5>Publication date: <em>{{ post.createDate.strftime("%d.%m.%Y") }}</em></h5>#}
+    {#{#                    <h4>Описание:<br>{{ post.body }}</h4>#}
+    {#{#                </div>#}
+    {#{#            </div>#}
+    {#{#        </div>#}
+    {#{##}
+    {#{#        <div class="like-comment d-flex pt-3 col-12">#}
+    {#{#            <div id="response" class="d-flex" style="align-items: center;">#}
+    {#{##}
+    {#{#                {% if is_like_set %}#}
+    {#{#                    <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:red;"></i>#}
+    {#{#                {% else %}#}
+    {#{#                    <i class="fas fa-heart" id="likeButton" style="cursor: pointer; color:#efefef;"></i>#}
+    {#{#                {% endif %}#}
+    {#{#                <h5 id='h5' style="margin-left: 3px;">{{ post.likes }}</h5>#}
+    {#{##}
+    {#{#            </div>#}
+    {#{#            <div class="comments-block ">#}
+    {#{#                <div class="d-block" style="align-items: center; margin-left: 10px;">#}
+    {#{#                    <a class="btn btn-primary comm d-flex" data-toggle="collapse" href="#collapseExample" role="button"#}
+    {#{#                       aria-expanded="false" id="btn-com" aria-controls="collapseExample" style="align-items: center;#}
+    {#{#                        width: 42px;">#}
+    {#{#                        <i class="fas fa-comment"></i>#}
+    {#{#                    </a>#}
+    {#{#                    <div class="collapse" id="collapseExample">#}
+    {#{#                        <div class="card card-body" style="padding: 0px;">#}
+    {#{#                            <form id="comment_form" class="d-block" style="align-items: center;"#}
+    {#{#                                  enctype="multipart/form-data">#}
+    {#{#                                <textarea id="comment_text" style="width: 250px" required></textarea>#}
+    {#{#                                <button class="btn btn-primary" id="btn-comment" data-toggle="collapse"#}
+    {#{#                                        href="#collapseExample" role="button"#}
+    {#{#                                        aria-expanded="true" id="btn-com" aria-controls="collapseExample" style="width: 250px">#}
+    {#{#                                    Оставить комментарий#}
+    {#{#                                </button>#}
+    {#{#                            </form>#}
+    {#{#                        </div>#}
+    {#{#                    </div>#}
+    {#{#                </div>#}
+    {#{#            </div>#}
+    {#{#        </div>#}
+    {#{#        <div id="comments col-12">#}
+    {#{#            {% for comments in post.comment %}#}
+    {#{#                <div class="media">#}
+    {#{#                    <div id="comment" class="media-body d-flex mt-4">#}
+    {#{#                        {% for author in comments.author %}#}
+    {#{#                            {% for image in author.avatar %}#}
+    {#{#                                <img src="{{ url_for('static', filename='img/avatars/' + image.name) }}"#}
+    {#{#                                     class="mr-3 rounded-circle user-comment-icon">#}
+    {#{#                            {% endfor %}#}
+    {#{#                            <div class="comment-body">#}
+    {#{#                            <h5>{{ author.nickname }}</h5>#}
+    {#{#                        {% endfor %}#}
+    {#{#                        {{ comments.text }}#}
+    {#{#                        </div>#}
+    {#{#                    </div>#}
+    {#{#                </div>#}
+    {#{#            {% endfor %}#}
+    {#{#        </div>#}
+    {#{##}
+    {#{#    </div>#}
+{% endblock %}

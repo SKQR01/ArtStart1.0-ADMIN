@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Редактирование профиля
+{% endblock %}
+
+{% block content_title %}
+    Редактирование профиля
+{% endblock %}
+
+{% block content %}
+
+    <form action="{{ url_for('edit_profile') }}" method="POST" enctype="multipart/form-data">
+        <div class="avatar">
+            <label>Изменить аватар</label>
+            <div>
+                <input type="file" name="avatar">
+            </div>
+        </div>
+        <div class="description mt-4 mb-4">
+            <label>Изменить описание профиля</label>
+            <div>
+                <textarea name="description" id="description" cols="60" rows="5"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-success" type="submit">Применить изменения</button>
+    </form>
+
+{% endblock %}

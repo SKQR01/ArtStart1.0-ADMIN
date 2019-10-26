@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ tag.name }}
+{% endblock %}
+
+{% block content_title %}
+    Posts for "{{ tag.name }}" tag:
+{% endblock %}
+
+{% block content %}
+
+    <div class="row" style="padding: 0px 20px;">
+        <div class="card-columns">
+            {% for post in pages.items %}
+                <a href="{{ url_for('posts.post_detail', id = post.id) }}">
+                    {% for picture in post.pictures %}
+                        <div class="card">
+                            <img src="{{ url_for('static', filename='img/' +  picture.name) }}" class="img-fluid">
+                        </div>
+                    {% endfor %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <nav>
+        <ul class="pagination">
+            <li {% if not pages.has_prev: %} class="d-none" {% endif %}>
+                <a class="page-link" href="./?page={{ pages.prev_num }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            {% for page in pages.iter_pages() %}
+                <li {% if page == pages.page %} class="page-item active" {% endif %}>
+                    <a class="page-link" href="./?page={{ page }}">{{ page }}</a></li>
+            {% endfor %}
+
+            <li {% if not pages.has_next %} class="d-none" {% endif %}>
+                <a class="page-link" href="./?page={{ pages.next_num }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {#    {% for p in posts %}#}
+    {#        <div>#}
+    {#            <a href=" {{ url_for('posts.post_detail', id=p.id) }}">{{ p.title }}</a>#}
+    {#        </div>#}
+    {#    {% endfor %}#}
+{% endblock %}

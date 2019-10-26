@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
+
+
+    {#    <link rel="stylesheet" href="{{ url_for('static', filename='css/jcrop.css') }}">#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/media.css') }}">
+
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+</head>
+
+
+<body>
+{#------------------------------------------------------------------------------#}
+
+
+<nav class="navbar navbar-dark for-medium">
+
+
+    <div class="row flex-grow-1" id="main-menu">
+        <div class="col-5"></div>
+        <div class="icon-title d-flex col-2">
+            <a class="navbar-brand mr-auto " href="/posts" style="color: #15acc5;">
+                {#                <img src="{{ url_for('static', filename='img/icons/ArtStart.svg') }}"#}
+                {#                     class="img-fluid" alt="" style="height: 80px;">#}
+                <strong>ArtStart</strong>
+            </a>
+        </div>
+        <div class="col-5"></div>
+
+
+        <div class="col-12" id="search">
+            <form class="form d-flex align-items-center">
+                <input class="form-control" type="search" placeholder="Search" id="search-input" aria-label="Search"
+                       name="q" style="border-radius: 5px 0px 0px 5px !important;"
+                       value="{{ request.args.get('q', '') }}">
+                <button class="btn btn-outline-success my-2"  style="border-radius: 0px 5px 5px 0px !important;"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div class="col-8" id="for-user">
+            <div>
+                <ul class="navbar-nav  navbar-expand" style="flex-flow: column;">
+
+                    <li class="if-not-login d-flex">
+                        {% if not current_user.is_authenticated %}
+                            <div class="nav-item reg col-sm-6 col-md-auto d-flex justify-content-center">
+                                <a class="nav-link" href="/register">Регистрация</a>
+                            </div>
+
+                            <div class="nav-item log col-sm-6 col-md-auto d-flex justify-content-center">
+                                <a class="nav-link" href="/login">Войти</a>
+                            </div>
+                        {% endif %}
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <div class="d-flex" id="if-login">
+                                <div class="nav-item home  justify-content-center">
+                                    <a class="nav-link" href="/home">Профиль</a>
+                                </div>
+                                <div class="nav-item logout  justify-content-center">
+                                    <a class="nav-link" href="/logout">Выйти</a>
+                                </div>
+                                <div class="nav-item home">
+                                    <a class="nav-link" href="/">Info</a>
+                                </div>
+                            </div>
+                        </li>
+
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-4 d-flex justify-content-end" id="toggler">
+            <button class="navbar-toggler col-sm-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users.index') }}">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('posts.index') }}">Посты</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{ url_for('posts.create_post') }}">Создать пост</a>
+                    </li>
+                {% endif %}
+        </div>
+    </div>
+
+
+</nav>
+
+
+{#------------------------------------------------------------------------------#}
+
+<nav class="navbar navbar-dark for-all">
+    <div class="row flex-grow-1" id="main-menu">
+        <div class="icon-title d-flex col-sm-4 col-md-2 col-lg-2">
+            <a class="navbar-brand mr-auto " href="/posts" style="color: #15acc5;">
+                {#                    <img src="{{ url_for('static', filename='img/icons/ArtStart.svg') }}"#}
+                {#                         class="img-fluid" alt="" style="height: 80px;">#}
+                ArtStart
+            </a>
+        </div>
+
+        <div class="col-sm-4 col-md-4 col-lg-5 col-xl-6" id="search">
+            <form class="form d-flex align-items-center">
+                <input class="form-control" type="search" placeholder="Search" id="search-input" aria-label="Search"
+                       name="q" style="border-radius: 5px 0px 0px 5px !important;"
+                       value="{{ request.args.get('q', '') }}">
+                <button class="btn btn-outline-success my-2" style="border-radius: 0px 5px 5px 0px !important;"><i class="fas fa-search" ></i></button>
+            </form>
+        </div>
+        <div class="col-sm-4 col-md-4 col-lg-3 col-xl-3" id="for-user">
+            <div>
+                <ul class="navbar-nav  navbar-expand" style="flex-flow: column;">
+
+                    <li class="if-not-login d-flex">
+                        {% if not current_user.is_authenticated %}
+                            <div class="nav-item reg col-sm-6 col-md-auto d-flex justify-content-center">
+                                <a class="nav-link" href="/register">Регистрация</a>
+                            </div>
+
+                            <div class="nav-item log col-sm-6 col-md-auto d-flex justify-content-center">
+                                <a class="nav-link" href="/login">Войти</a>
+                            </div>
+
+                            <div class="nav-item home">
+                                    <a class="nav-link" href="/">Info</a>
+                                </div>
+                        {% endif %}
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <div class="d-flex" id="if-login">
+                                <div class="nav-item home  justify-content-center">
+                                    <a class="nav-link" href="/home">Профиль</a>
+                                </div>
+                                <div class="nav-item logout  justify-content-center">
+                                    <a class="nav-link" href="/logout">Выйти</a>
+                                </div>
+                                <div class="nav-item home">
+                                    <a class="nav-link" href="/">Info</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-sm-4 col-md-2 col-lg-2 col-xl-1 pr-md-3 d-flex justify-content-end" id="toggler">
+            <button class="navbar-toggler col-sm-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if current_user.has_role('admin') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">Admin</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users.index') }}">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('posts.index') }}">Посты</a>
+                </li>
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{ url_for('posts.create_post') }}">Создать пост</a>
+                    </li>
+                {% endif %}
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid">
+
+
+    <h1>
+        {% block content_title %}
+
+        {% endblock %}
+    </h1>
+
+
+    {% block content %}
+
+    {% endblock %}
+
+
+</div>
+<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+{#<script src="{{ url_for('static', filename='js/imagesloaded.pkgd.js') }}"></script>#}
+{#<script src="{{ url_for('static', filename='js/jquery-imagefill.js') }}"></script>#}
+
+{#<script src="{{ url_for('static', filename='js/masonry.pkgd.js') }}"></script>#}
+
+
+{#<script src="{{ url_for('static', filename='js/jcrop.js') }}"></script>#}
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<div class="clear" style="width:auto; height: 250px;"></div>
+</body>
+
+</html>
